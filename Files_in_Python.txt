@@ -1,0 +1,389 @@
+-----------------FILES-------------------------
+-----------------------------------------------
+Filenames and Absolute/Retavie File Paths:
+------------------------------------------
+Basically a file kind of property:
+1. file name (Ex: Something.txt or something.png or something.pdf)
+2. file extension (ex: .txt or .png...)
+3. file path (Ex: C:\Dropbox\Fix_Migration )
+
+Examples: how we can define a path for a file... in windows..
+>>> 'c:\\spam\\eggs.png'
+'c:\\spam\\eggs.png'
+>>> print('\\')
+\
+>>> r'c:\spam\eggs.png'
+'c:\\spam\\eggs.png'
+>>> 
+>>> '\\'.join(['folder','folder','folder3','file.png'])
+'folder\\folder\\folder3\\file.png'
+>>> 
+>>> print(r'c:\spam\eggs.png')
+c:\spam\eggs.png
+>>> 
+>>> import os
+>>> os.path.join('folder1','folder2','folder3','file.png')
+'folder1\\folder2\\folder3\\file.png'
+>>> 
+>>> os.sep    # OS stores.... '\\' in sep
+'\\'
+
+>>> os.getcwd()       #get current working directory information.....
+'C:\\Users\\c_bibhup\\AppData\\Local\\Programs\\Python\\Python37'
+>>> os.chdir('C:\\')  #change directory to... some specific location..
+>>> os.getcwd()
+'C:\\'
+>>>
+
+>>> os.path.abspath('NEWS.txt')     # to get the absolute path
+'C:\\Users\\c_bibhup\\AppData\\Local\\Programs\\Python\\Python37\\NEWS.txt'
+>>> os.path.abspath('..\\..\\NEWS.txt') # to get reletive path to some specific folder
+'C:\\Users\\c_bibhup\\AppData\\Local\\Programs\\NEWS.txt'
+>>> os.path.isabs('..\\..\\NEWS.txt')  #to check a path is absolute or not
+False
+>>> os.path.isabs('c:\\folder\\folder1')
+True
+>>> 
+>>> os.path.relpath('C:\\folder1\\folder2\\spam.png','C:\\folder1')  # returns the relative path between two paths..
+'folder2\\spam.png'
+>>> 
+>>> os.path.dirname('c:\\folder1\\folder2\\spam.png')  # give the directory name
+'c:\\folder1\\folder2'
+>>> os.path.basename('c:\\folder1\\folder2\\spam.png') 3 give the file name in the directory..
+'spam.png'
+>>> 
+
+
+>>> os.path.exists('C:\\Users\\c_bibhup\\AppData\\Local\\Programs\\Python\\Python37\\NEWS.txt')
+True
+>>> os.path.exists('C:\\Users\\c_bibhup\\AppData\\Local\\Programs\\Python\\Python37\\spam.png')
+False
+>>> os.path.exists('c:\\windows\\system32\\calc.exe')
+True
+>>> 
+>>> os.path.isfile('c:\\windows\\system32\\calc.exe')
+True
+>>> os.path.isfile('c:\\windows\\system32')
+False
+>>> os.path.isdir('c:\\windows\\system32\\calc.exe')
+False
+>>> os.path.isdir('c:\\windows\\system32')
+True
+
+>>> os.path.getsize('c:\\windows\\system32\\calc.exe')
+27648                                               -----------. it is in bytes hence 27kb
+>>> os.listdir('C:\\Dropbox')
+['CU_Audio_Dec.xlsx', 'Documents', 'Fix_Migration', 'lincase', 'lincase_asia.txt', 'LWH_Bibhu_Prasad_Dash_January.xlsx', 'META.txt', 'MY_tickets.txt', 'OneNote', 'Python_Note_book.txt', 'Python_Note_Files.txt', 'Python_practice', 'Rack Setup_Nov1-2018.xlsx', 'Reports', 'scene4_0.67_scaled.pdf', 'secondary_image.bat', 'Softwares', 'T32', '~$Rack Setup_Nov1-2018.xlsx']
+>>> 
+
+WAP to find the total size of all file present in a path...
+>>> totalsize = 0
+>>> for filename in os.listdir('C:\\Dropbox'):
+	if not os.path.isfile(os.path.join('C:\\Dropbox',filename)):
+		continue
+	totalsize = totalsize + os.path.getsize(os.path.join('C:\\Dropbox',filename))
+
+	
+>>> 
+>>> totalsize
+1265031      -------------------> this size not include directory sizes inside 'c:\Dropbox'
+
+If you want to crete any directory... below is the syntax example...
+>>> os.makedirs('c:\\Dropbox\Bibhu\\Raja\\kunu')
+
+
+
+Note:
+-------------
+->Files have a name and a path
+->The root folder is the lowest folder. It's C:\ on Windows and / on Linux and Mac.
+->In a file path, the folders and filename are separated by backslashes on windows and forward slashes on Linux and Mac.
+-> Use the os.path.join() function to combine folders with the correct slash.
+->The current working directory is the folder that any relative paths are relative to.
+->os.getcwd() will return the current working diretory.
+->os.chdir() will change the current working directory.
+->Absolute paths begin with the root folder, relative paths don't.
+->The . folder represents "this folder" , the ..folder represents "the parent folder".
+->os.path.abspath() returns an absolute path form of the path passed to it.
+->os.path.isabs() returns True if the path passed to it is absolute.
+->os.path.relpath() returns the relative path between two paths passed to it.
+->os.makedirs() can make folders.
+->os.path.getsize() returns a file's size
+->os.listdir() returns a list of strings of filenames
+->os.path.exists() returns True if the filename passed to it exists.
+->os.path.isfile() and os.path.isdir() return True if they were passed a filename or file path.
+
+-------------------------------------------
+Reading and Writing Plaintext Files:
+-------------------------------------------
+
+>>> import os
+
+>>> file_obj=open('C:\\Python27\\hello.txt')
+
+>>> file_obj.read()
+
+'Hello Bibhu:)\nRead python properly'
+
+>>> file_obj.close()
+
+>>> file_obj=open('C:\\Python27\\hello.txt')
+
+>>> content=file_obj.read()
+
+>>> print(content)
+
+Hello Bibhu:)
+Read python properly
+
+>>> file_obj.close()
+
+>>> 
+
+
+readlines() method:
+-------------------
+
+It returns a list of lines in a file...
+
+
+>>> file_obj=open('C:\\Python27\\hello.txt')
+
+>>> file_obj.readlines()
+
+['Hello Bibhu:)\n', 'Read python properly']
+
+>>> file_obj.close()
+
+>>>
+
+>
+>>> import os
+
+>>> file_obj=open('C:\\Python27\\hello.txt','w')
+
+>>> file_obj.write('Hellooooo... :)')
+
+>>> file_obj.write('Hellooooo...')
+
+>>> file_obj.close()
+
+
+>>> file_obj=open('hello.txt','a')
+
+>>> file_obj.write('wow bibhu u r great')
+
+>>> 
+file_obj.read()
+Traceback (most recent call last):
+ 
+ File "<pyshell#28>", line 1, in <module>
+    
+file_obj.read()
+IOError: File not open for reading
+
+>>> file_obj.close()
+
+>>> 
+
+
+
+
+
+Shelve module:
+--------------
+->The shelve module can store Python values in a binary file and 
+  it help us store the list/dictoonary type of data in form of binary and retrive it in future ...
+
+>>> import shelve
+>>> shelfFile = shelve.open('mydata')
+>>> shelfFile['cats'] = ['Suno','Chikun','Sipun']
+>>> shelfFile.close()
+>>> 
+>>> shelfFile = shelve.open('mydata')
+>>> shelfFile['cats']
+['Suno', 'Chikun', 'Sipun']
+>>> shelfFile.close()
+
+
+Note: inthe current working directory, it will create three file which is in the form of binaray or  not readable in text...
+      those files are :  mydata.bak
+       			 mydata.dat
+			 mudata.dir
+
+But in Linux or mac ... it will create only one file that is ... mydata.db
+
+-> Shelve file objects are very simillar to ... dictionary and have same kind of property ... like keys() and values() methods...
+
+Example:
+>>> shelfFile = shelve.open('mydata')
+>>> shelfFile.keys()
+KeysView(<shelve.DbfilenameShelf object at 0x000001DA66CD4A90>)
+>>> list(shelfFile.keys())
+['cats']
+>>> list(shelfFile.values())
+[['Suno', 'Chikun', 'Sipun']]
+>>>
+
+Note:
+
+-------
+
+->open() will return a file object which has reading and writing related methods.
+
+->Pass 'r' (or nothing) to open() to open the file in read mode, 'w' for write mode, 'a' for append mode.
+
+->Opening a nonexistant filename in write or append mode will create that file.
+
+->Call read() or write() to read the contents of a file or write a string to a file.
+
+->Call readlines() to return a list of strings of the file's content.
+
+-> Call close() when you are done with the file.
+
+->The shelve module can store Python values in a binary file.
+
+->shelve.open() returns a dictionary-like shelf value.
+
+
+
+-------------------------------------------
+Copying and Moving Files and Folders:
+-------------------------------------------
+
+>>> import shutil
+>>> shutil.copy('LICENSE.txt','c:\\Dropbox')
+'c:\\Dropbox\\LICENSE.txt'
+>>> shutil.copy('LICENSE.txt','c:\\Dropbox\\license_new.txt')
+'c:\\Dropbox\\license_new.txt'
+>>> shutil.copytree('C:\\Dropbox\\Reports','c:\\Dropbox\\Reports_new')
+'c:\\Dropbox\\Reports_new'
+>>> r'C:\Dropbox\lincase_asia.txt'
+'C:\\Dropbox\\lincase_asia.txt'
+>>> shutil.move('C:\\Dropbox\\lincase_asia.txt','C:\\Dropbox\\Reports')
+'C:\\Dropbox\\Reports\\lincase_asia.txt'
+>>> shutil.move('C:\\Dropbox\\lincase_asia.txt','C:\\Dropbox\\Reports\lincase_asia_new.txt')
+'C:\\Dropbox\\Reports\\lincase_asia_new.txt'
+>>> 
+
+
+
+-------------------------------------------
+Deleting Files:
+-------------------------------------------
+
+>>> import os
+>>> os.unlink('C:\\Dropbox\\Reports\\lincase_asia_new.txt')------> ity will delete a file
+>>> os.unlink('C:\\Dropbox\\Reports\\lincase_asia.txt')
+>>> 
+>>> 
+>>> 
+>>> os.rmdir('C:\Dropbox\Reports_new') -------> it will only work if the directory is empty
+Traceback (most recent call last):
+  File "<pyshell#323>", line 1, in <module>
+    os.rmdir('C:\Dropbox\Reports_new')
+OSError: [WinError 145] The directory is not empty: 'C:\\Dropbox\\Reports_new'
+>>> 
+>>> import shutil
+>>> shutil.rmtree(''C:\\Dropbox\\Reports_new'')----------------> the shell utility module(shutil) has a method (rmtree) , which is used to delete a non-empty directory..
+SyntaxError: invalid syntax
+>>> shutil.rmtree('C:\\Dropbox\\Reports_new')
+>>> 
+>>> 
+
+
+Q>write a script to chek for a perticular file before deleting it...?
+------------
+import os
+
+os.chdir('C:\\Dropbox')
+
+for filename in os.listdir():
+	if filename.endswith('.txt'):
+		#os.unlink(filename)
+		#print(filename)
+----------
+
+
+Note: These all above... commands are used to be... delete a file/directory permanently...
+We can delete a file and send it to bin/recyclebin ... by use of send2trash module...
+install it by:  'pip install send2trash'
+
+
+
+
+>>> import send2trash
+>>> send2trash.send2trash('C:\\Dropbox\\Reports\\lincase_asia.txt') ------------>if go and recyclebin it will be there...
+>>> 
+
+Note:
+------
+->os.unlink() will delete a file
+->os.rmdir() will delete a folder(but the folder must be empty)
+->shutil.rmtree() will delete a folder and all it's contents..
+->Deleting can be dangerous, sodo a dry run first..
+->send2trash.send2trash() will send file or a folder to the recyclebin.
+
+-------------------------------------------
+Walking a Directory Tree:
+-------------------------------------------
+
+Directory tree:
+------------
+C:\\Dropbox\\Delicious:
+		Documnets-->
+			FARM_Usage_Training_Nov_2017.ppt
+			PTM CASE and SPLUNK overview_June2017.pptx
+			PTM_CASE_Splunk_Update_Jan_2018.pptx
+			Setup_Slides.pptx
+		LICENSE.txt
+		license_new.txt
+		lincase_asia.txt
+-----------------
+Q> write a script to walk through the above directory tree..
+
+>>> import os
+>>> 
+>>> for folderName, subfolders, filenames in os.walk('C:\\Dropbox\\Delicious'):
+	print('The folder is:'+folderName)
+	print('The subfolders in '+folderName+' are: '+str(subfolders))
+	print('The filenames in '+folderName+' are; '+str(filenames))
+	print()
+
+	
+The folder is:C:\Dropbox\Delicious
+The subfolders in C:\Dropbox\Delicious are: ['Documents']
+The filenames in C:\Dropbox\Delicious are; ['LICENSE.txt', 'license_new.txt', 'lincase_asia.txt']
+
+The folder is:C:\Dropbox\Delicious\Documents
+The subfolders in C:\Dropbox\Delicious\Documentsare: []
+The filenames in C:\Dropbox\Delicious\Documentsare; ['FARM_Usage_Training_Nov_2017.ppt', 'PTM CASE and SPLUNK overview_June2017.pptx', 'PTM_CASE_Splunk_Update_Jan_2018.pptx', 'Setup_Slides.pptx', 'Thumbs.db', '~$FARM_Usage_Training_Nov_2017.ppt']
+
+>>> 
+
+
+Note:
+-----
+walk() method returns three  list values (i.e current directory, sub-directories in current dir, files in current dir) 
+-----
+
+we can use the above code delete a bulk amount of file if needed as written below:---------->
+----
+import os
+
+for folderName, subfolders, filenames in os.walk('C:\\Dropbox\\Delicious'):
+	print('The folder is:'+folderName)
+	print('The subfolders in '+folderName+' are: '+str(subfolders))
+	print('The filenames in '+folderName+' are; '+str(filenames))
+	print()
+
+	for subfolder in subfolders:
+		if 'fish' in subfolder:
+			os.rmdir(subfloder)
+
+	for file in filenames:
+		if file.endswith('.py'):
+			shutil.copy(os.join(folderName, file), os.join(folderName, file + '.backup'))
+
+
+---------------------------------------------------------
