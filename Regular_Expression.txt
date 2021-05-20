@@ -1,0 +1,466 @@
+Regular expression:
+------------------------
+"import re" module has all the regular expressions function in it..
+
+Q> WAP to findout phone numbers using regular expression?
+
+Ans:-
+import re
+
+msg= 'Call me 415-555-1011 tomorrow, or at 415-555-9999'
+
+phoneNumRegx =re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')  # r'' is a raw string which will not consider '\' as for escape characters... in regular exp.. will                                                       use lot of '\'
+
+MatchObj = phoneNumRegx.search(msg)
+print(MatchObj.group())
+------------------
+O/p- search function will give only first occourance of phone number..
+     so for this we can use findall() method to gett all the phone numbers...
+
+like below.. and findall()... returns a list
+list_of_numbers= phoneNumRegx.findall(msg)
+
+notes:
+--------------
+->Regx strings are often use \ backslashes(like \d), so they are often raw strings: r'\d'
+->import the re module first
+->Call the re.compile() method to create a regx object.
+->call the regx object's search() method to create a match object.
+->call the match object's group method to get the matched string.
+-> \d is the regex for a numeric digit character.
+--------------
+
+---------------------------------------------
+Regular Expression Groups and Pipe characters:
+----------------------------------------------
+we can create some groups in regular expression like below.....
+import re
+
+msg= 'Call me 415-555-1011 tomorrow, or at 415-555-9999'
+
+phoneNumRegx =re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')  
+
+MatchObj = phoneNumRegx.search(msg)
+print(MatchObj.group(1))
+-----
+O/P: 415
+
+we can use pipe for matching a sufix after a perticular string...
+
+ex:
+batRegx = re.compile(r'Bat(man|mobile|copter|bat)')
+MatchObj = phoneNumRegx.search('Batmobile lost a wheel')
+MatchObj.group()
+----
+o/p:- Batmobile
+
+MatchObj.group(1)
+------
+o/p: 'mobile'
+
+Note:
+-------------
+->Groups are created in regex strings with parentheses.
+->The first set of parentheses is group1 and second is 2 and... so on..
+->Calling group() or group(0) returns the full matchiung string, group(1) returns , group 1's matching string, and so on...
+->use \( and \) to match literal parantheses in the regex string..
+-> The | pipe can match one of many possible groups.
+
+-------------------------------------------------------------
+Repetition in Regex Patterns and Greedy/Nongreedy Matching:
+--------------------------------------------------------------
+question mark character (?)--- this is kind infor mation to interpreter that make this characheter or group before ? optional , mean it can come in the string 0 or 1 time...
+----------------------------
+import re
+batRegex = re.compile(r'Bat(wo)?man') #the questin mark says (wo) group can be apear 0 or 1 times in a string...
+mo = batRegex.search('The Adventures of Batman')
+mo.group()
+-------
+o/p: 'Batman'
+
+>>> import re
+>>> batRegex = re.compile(r'Bat(wo)?man')
+>>> mo = batRegex.search('The adventure of Batman')
+>>> mo.group()
+'Batman'
+>>> mo = batRegex.search('The adventure of Batwoman')
+>>> mo.group()
+'Batwoman'
+>>> mo = batRegex.search('The Adventures of Batwowoman Batman')
+>>> mo.group()
+'Batman'
+>>> mo = batRegex.search('The adventure of Batwoman Batman')
+>>> mo.group()
+'Batwoman'
+>>> mo = batRegex.search('The adventure of Batman Batwoman')
+>>> mo.group()
+'Batman'
+>>> mo = batRegex.search('The adventure of Batwowoman')
+>>> mo.group()
+Traceback (most recent call last):
+  File "<pyshell#14>", line 1, in <module>
+    mo.group()
+AttributeError: 'NoneType' object has no attribute 'group'
+>>> mo == None
+True
+>>> phnRegex = re.compile(r'(\d\d\d-)?\d\d\d-\d\d\d\d')
+>>> mo = phnRegex.search('my phone number is 415-555-1234')
+>>> mo.group()
+'415-555-1234'
+>>> mo = phnRegex.search('my phone number is 555-1234')
+>>> mo.group()
+'555-1234'
+>>> 
+
+
+The astresic(*) character: (0 or more times...)
+-----------------------------------------------
+>>> batRegex = re.compile(r'Bat(wo)*man')
+>>> mo = batRegex.search('The adventures of Batman')
+>>> mo.group()
+'Batman'
+>>> mo = batRegex.search('The adventures of Batman')
+>>> mo = batRegex.search('The adventures of Batwoman')
+>>> mo.group()
+'Batwoman'
+>>> mo = batRegex.search('The adventures of Batwowowoman')
+>>> mo.group()
+'Batwowowoman'
+
+
+The plus (+) character: (the group proceed with + must appear at least 1 time..)
+--------------------------------------------------------------------------
+
+>>> batRegex = re.compile(r'Bat(wo)+man')
+>>> mo = batRegex.search('The adventures of Batman')
+>>> mo.group()
+Traceback (most recent call last):
+  File "<pyshell#58>", line 1, in <module>
+    mo.group()
+AttributeError: 'NoneType' object has no attribute 'group'
+>>> mo == None
+True
+>>> mo = batRegex.search('The adventures of Batwoman')
+>>> mo.group()
+'Batwoman'
+>>> mo = batRegex.search('The adventures of Batwowowoman')
+>>> mo.group()
+'Batwowowoman'
+>>> 
+
+If we want to escape these ?,* and + character in regex .. we can do it... with ... below syntax:
+-------------------------------------------------------------------------------------------------
+>>> batRegex = re.compile(r'\+\*\?')
+>>> mo = batRegex.search('I learned about +*? in the regular expression')
+>>> mo.group()
+'+*?'
+
+Exactly {x} character:
+----------------------
+>>> haRegex = re.compile(r'(Ha){3}')
+>>> haRegex.search('He said HaHaHa')
+<re.Match object; span=(8, 14), match='HaHaHa'>
+>>> haRegex.search('He said HaHaHaHaHaHa')
+<re.Match object; span=(8, 14), match='HaHaHa'>
+>>> 
+>>> haRegex = re.compile(r'(Ha){3,5}')
+>>> haRegex.search('He said HaHaHa')
+<re.Match object; span=(8, 14), match='HaHaHa'>
+>>> haRegex.search('He said HaHaHaHaHaHa')
+<re.Match object; span=(8, 18), match='HaHaHaHaHa'>
+>>> haRegex.search('He said HaHaHaHaHaHaHaHa')
+<re.Match object; span=(8, 18), match='HaHaHaHaHa'>
+>>> 
+
+Greedy matching:
+----------------
+>>> digitRegex = re.compile(r'(\d){3,5}')
+>>> digitRegex.search('1234567890')
+<re.Match object; span=(0, 5), match='12345'>  # it matches max longest possible string...
+
+Nongreedy Matching:
+-------------------
+>>> digitRegex = re.compile(r'(\d){3,5}?')
+>>> digitRegex.search('1234567890')
+<re.Match object; span=(0, 3), match='123'>  # it matches smallest possible string..
+
+Note:
+-----
+->The ? says the group matches Zero or one times.
+->The * says the group matches zero or more times.
+->The + says the group matches one or more times...
+->The curly braces can match a specific number of times..
+->The curly braces with two numbers matches a minimum and maximum number of times.
+->Leaving out the first or second number in the curly braces says there is no minimum or maximum.
+->Greedy matching match the longest string possible, nongreedy matching match the shortest string possible..
+->Putting a question mark after the curly braces makes it do a nongreedy match.
+
+-------------------------------------------------
+Regex Character classes and the findall() method:
+-------------------------------------------------
+>>> resume = ''' My name is Bibhu.
+I am working in Aricent.
+But my client is Qualcomm.
+My client number is 408-555-5555 and i am sitting at 6th building.
+My Aricent office number is 508-555-1234.
+I am good at Python.
+'''
+>>> phoneRegex = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')
+>>> phoneRegex.search(resume)
+<re.Match object; span=(91, 103), match='408-555-5555'>
+>>> phoneRegex.findall(resume)
+['408-555-5555', '508-555-1234']
+
+Note: findall() method returns a list value..
+
+If we will try to implement groups in a pattern and try to use findall() method for that pattern ... then it will return a list of tuples.
+Please find the below example for details...
+
+>>> phoneRegex = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
+>>> phoneRegex.findall(resume)
+[('408', '555-5555'), ('508', '555-1234')]
+>>>
+
+Character Classes:
+------------------
+\d ------------> Any numeric digit from 0 to 9
+\D ------------> Any character that is not a numeric digit from 0 to 9. 
+\w ------------> Any letter numeric digit, or the underscore character.(think of this as matching "word" characters.)
+\W ------------> Any character that is not a letter , numeric digit or the underscore character.
+\s ------------> Any space ,tab, or newline character. (think of this as matching "space" characters)
+\S ------------> Any character that is not a space, tab or newline.
+
+Exapmle: (12 days a christmas example)
+--------
+>>> lyrics ='12 drummers druming, 11 pipers piping, 10 lords a leaping, 9 ladies dancing, 8 maids a milking, 7 swans a swiming, 6 geese a laying, 5 golden rings, 4 calling birds, 3 french hens, 2 turtle doves, and 1 partridge in a pear tree'
+>>> xmasRegex = re.compile(r'\d+\s\w+')
+>>> xmasRegex.findall(lyrics)
+['12 drummers', '11 pipers', '10 lords', '9 ladies', '8 maids', '7 swans', '6 geese', '5 golden', '4 calling', '3 french', '2 turtle', '1 partridge']
+>>> 
+
+we can also define our own character classes...
+>>> vowelRegex = re.compile(r'[aeiouAEIOU]') # same as r'(a|e|i|o|u)'
+>>> vowelRegex.findall('Robocop eats baby food.')
+['o', 'o', 'o', 'e', 'a', 'a', 'o', 'o']
+>>> 
+
+>>> vowelRegex = re.compile(r'[aeiouAEIOU]{2}')
+>>> vowelRegex.findall('Robocop eats baby food.')
+['ea', 'oo']
+>>> 
+>>> vowelRegex = re.compile(r'[^aeiouAEIOU]') # ^ indicates except these characters..
+>>> vowelRegex.findall('Robocop eats baby food.')
+['R', 'b', 'c', 'p', ' ', 't', 's', ' ', 'b', 'b', 'y', ' ', 'f', 'd', '.']
+>>>
+
+
+-----------------------------------------------------
+regex Dot-Star and the Caret(^)/Dollar($) Characters:
+-----------------------------------------------------
+>>> import re
+>>> beginsWithHelloRegex = re.compile(r'^Hello')
+>>> beginsWithHelloRegex.findall('Hello there Hello')
+['Hello']
+
+>>> endsWithWorldregex = re.compile(r'world!$')
+>>> endsWithWorldregex.findall('Hello world! world1')
+[]
+>>> endsWithWorldregex.findall('Hello world! world!')
+['world!']
+>>> 
+
+------------------
+>>> allDigitsRegex = re.compile(r'^\d+$') # combinations of ^ and $
+>>> allDigitsRegex.findall('1234567890')
+['1234567890']
+>>> 
+>>> allDigitsRegex.findall('12345x67890')
+[]                                          # None
+>>> allDigitsRegex.findall('12345 x 67890')
+[]                                          # None
+>>> 
+
+dot (.) character:
+--------------------
+
+>>> atRegex = re.compile(r'.at')   # it means anything followed by 'at'
+>>> atRegex.findall('The cat in the hat sat on the flat mat.')
+['cat', 'hat', 'sat', 'lat', 'mat']
+>>>
+
+>>> atRegex = re.compile(r'.{1,2}at')  # it means anything 1 to 2 character followed by 'at'
+>>> atRegex.findall('The cat in the hat sat on the flat mat.')
+[' cat', ' hat', ' sat', 'flat', ' mat']
+>>> 
+
+Dot-Star (.*) character:
+------------------------
+>>> nameRegex = re.compile(r'First name:(.) Last name:(.)')
+>>> nameRegex.findall('First name: Bibhu Last name: Dash')
+[(' Bibhu', ' Dash')]
+
+>>> serve = '<To serve humans> for dinner.>'
+>>> nongreedy = re.compile(r'<(.*?)>')
+>>> nongreedy.findall(serve)
+['To serve humans']
+
+>>> greedy = re.compile(r'<(.*)>')
+>>> greedy.findall(serve)
+['To serve humans> for dinner.']
+
+Note: .* perform greedy matching .. anything afetr a given character, but it will not count '\n' in the greedy matching.
+       as soon as it gets a '\n' newline character.... it completes its task... please find the below exaple with solution...
+
+>>> prime = 'Serve the public trust.\nProtect the innocent. \nUpload the law.'
+>>> print(prime)
+Serve the public trust.
+Protect the innocent. 
+Upload the law.
+>>> 
+>>> dotStar = re.compile(r'.*')
+>>> dotStar.search(prime)
+<re.Match object; span=(0, 23), match='Serve the public trust.'>
+>>> 
+>>> dotStar = re.compile(r'.*',re.DOTALL)
+>>> dotStar.search(prime)
+<re.Match object; span=(0, 62), match='Serve the public trust.\nProtect the innocent. \n>
+>>> 
+
+-----------
+>>> vowelRegx = re.compile(r'[aeiou]')
+>>> vowelRegx.search('Al, why does your programming book talk about RoboCop so much')
+<re.Match object; span=(9, 10), match='o'>
+>>> vowelRegx.findall('Al, why does your programming book talk about RoboCop so much')
+['o', 'e', 'o', 'u', 'o', 'a', 'i', 'o', 'o', 'a', 'a', 'o', 'u', 'o', 'o', 'o', 'o', 'u']
+>>> 
+>>> vowelRegx = re.compile(r'[aeiou]',re.IGNORECASE)
+>>> vowelRegx.findall('Al, why does your programming book talk about RoboCop so much')
+['A', 'o', 'e', 'o', 'u', 'o', 'a', 'i', 'o', 'o', 'a', 'a', 'o', 'u', 'o', 'o', 'o', 'o', 'u']
+>>> 
+
+Note:
+-----
+-> ^ means the string must start with the pattern, $ means the string must end with the pattern.
+   Both means entire string must match the pattern.
+-> The dot is wildcard; it matches anything except newline..
+->Pass re.DOTALL as the 2nd argument to re.compile() to make the . dot match newlines as well.
+->Pass re.I or re.IGNORECASE as the 2nd argument to re.compile() to make the matching case-sensitive...
+
+Regex sub() Method and Verbose Mode:
+
+------------------------------------
+
+sub() method help us to match a patter and replace/substitute the pattern with ... new one..
+
+Example:
+
+>>> import re
+
+>>> namesRegex = re.compile(r'Agent \w+')
+
+>>> namesRegex.findall('Agent Alice gave the secret documents to Agent Bob')
+
+['Agent Alice', 'Agent Bob']
+
+>>> 
+
+>>> namesRegex.sub('REDACTED','Agent Alice gave the secret documnts to Agent Bob.')
+
+'REDACTED gave the secret documnts to REDACTED.'
+
+>>>
+
+Example:
+
+>>> namesRegex = re.compile(r'Agent (\w)\w*')
+
+>>> namesRegex.findall('Agent Alice gave the secret documents to Agent Bob')
+
+['A', 'B']
+
+>>> 
+
+>>> namesRegex.sub(r'Agent \1**','Agent Alice gave the secret documnts to Agent Bob.')
+
+'Agent A** gave the secret documnts to Agent B**.'
+
+>>> 
+
+
+Verbose mode we use for to make the code more readble. Below is the example...
+
+
+re.compile(r'''
+
+(\d\d\d-)|    #area code (without parens, with dash)
+
+(\(\d\d\d) )  #-or- area code with parens and no dash
+
+\d\d\d        #First 3 digits
+-      	      #second dash
+
+\d\d\d\d      #last 4 digits
+\sx\d{2,4}    # extension, like x1234''', re.IGNORECASE | re.DOTALL | re.VERBOSE))
+
+
+
+Note:
+
+--------
+
+->The sub() regex method will substitute matches with some other text.
+
+->Usng \1,\2, and so will substitute group 1,2 etc in the regex pattern.
+
+->Passing re.VERBOSE lets you add whitespace and comments to the regex string passed to re.compile().
+
+->if you want to pass multiple arguments (re.DOTALL, re.IGNORECASE, re.VERBOSE), combine them with the | bitwise operator.
+
+
+Regex example program: A Phone and Email Scraper:
+-------------------------------------------------
+Suppose one big file is there which contains phn numbers and emails and other informations.... we have to find the all phn numbers and emails from that file...
+
+Example:
+#! python3
+
+import re, pyperclip
+
+#Create a regex for phone numbers....
+phoneRegex = re.compile('''
+# 415-555-0000, 555-0000, (415) 555-0000, 555-0000 ext 12345, ext. 12345, x12345
+(
+((\d\d\d) | (\(\d\d\d\)))?		#area code optional
+(\s|-)		#first separator
+\d\d\d		#first 3 digits
+-		#separator
+\d\d\d\d		#last 4 digits
+(((ext(\.)?\s)|x) #extension word-part (optional)
+(\d{2,5}))	#extension number-part (optional)
+)	
+''', re.VERBOSE)
+
+# Create a regex for email addresses
+emailRegex = re.compile(r''' 
+# some.+_thing@(\d{2,5}))?.com
+
+[a-zA-Z0-9_.+]+		#name part
+@			#@ symbol
+[a-zA-Z0-9_.+]+		#domaun name part
+
+''',re.VERBOSE)
+
+# Get the text off the clipboard
+text = pyperclip.paste()
+
+# Extract the email/phone from this text
+extractedPhone = phoneRegex.findall(text)
+extractedEmail = emailRegex.findall(text)
+
+allPhoneNumbers = []
+for phoneNumber in extractedPhone:
+	allPhoneNumbers.append(phoneNumber[0])
+
+# Copy the extracted email/phone to clipboard
+results = '\n'.join(allPhoneNumbers) + '\n' + '\n'.join(extractedEmail)
+pyperclip.copy(results)
